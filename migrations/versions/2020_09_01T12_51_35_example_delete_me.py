@@ -1,3 +1,5 @@
+# disable linting errors caused by alembic auto generated code
+# pylint: disable=invalid-name,missing-function-docstring,no-member
 """example delete me
 
 Revision ID: 2020_09_01T12_51_35
@@ -6,8 +8,6 @@ Create Date: 2020-09-01 12:51:35.147129
 
 """
 from alembic import op
-
-from seeds.AccountsSeeder import AccountsSeeder
 import sqlalchemy as sa
 
 
@@ -37,7 +37,9 @@ def downgrade():
 
 
 def seed():
-    insert_person_sql = "INSERT INTO accounts (username, password, email) VALUES ('{username}', '{password}', '{email}');"
+    insert_person_sql = (
+        "INSERT INTO accounts (username, password, email) VALUES ('{username}', '{password}', '{email}');"
+    )
     op.get_bind().execute(sa.text(insert_person_sql.format(
         username='MyUsername',
         password='MyPassword',

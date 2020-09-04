@@ -1,3 +1,5 @@
+# disable linting errors caused by alembic code
+# pylint: disable=invalid-name,missing-function-docstring,no-member
 """${message}
 
 Revision ID: ${up_revision}

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+# This script creates a migration file enforcing linear cronological ids
+
 set -euo pipefail
 
 pip install -r requirements.txt
