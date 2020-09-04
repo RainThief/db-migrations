@@ -5,6 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
+from util.Seeder import Seeder
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 # pylint: disable=no-member
