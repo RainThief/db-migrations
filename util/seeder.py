@@ -45,7 +45,7 @@ class Seeder():
 
     @staticmethod
     @abstractmethod
-    def create_unique(unique_key, func: Callable[..., Any], *args: List[Any]):
+    def create_unique(unique_key: str, func: Callable[..., Any], *args: List[Any]):
         """Create a guaranteed unique value
 
         Args:
@@ -58,9 +58,11 @@ class Seeder():
         """
         value = func(*args)
 
+        # create unique key of not exists
         if unique_key not in Seeder.unique.keys():
             Seeder.unique[unique_key] = []
 
+        # if value generated has already been used, recurse to try again
         if value in Seeder.unique[unique_key]:
             return Seeder.create_unique(unique_key, func, *args)
 
