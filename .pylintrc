@@ -1,0 +1,10 @@
+[MESSAGES CONTROL]
+
+# disable nuances in coding standards accepted in alembic
+# as alembic runs from its own python environment
+disable=abstract-method,
+        import-error,
+
+
+[FORMAT]
+max-line-length=120
