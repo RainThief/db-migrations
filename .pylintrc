@@ -2,8 +2,11 @@
 
 # disable nuances in coding standards accepted in alembic
 # as alembic runs from its own python environment
-disable=abstract-method,
+disable=
+        # alembic runs in different path
         import-error,
+        # models may not contain public methods
+        too-few-public-methods
 
 
 [FORMAT]

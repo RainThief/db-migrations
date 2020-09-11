@@ -9,6 +9,9 @@ Create Date: ${create_date}
 """
 from alembic import op, context
 ${imports if imports else ""}
+# this import may not be used if not using sqlalchemy imports
+# but needs to be in template for convienece
+import sqlalchemy as sa # pylint: disable=unused-import
 
 # import seeders and utils here
 

@@ -5,47 +5,66 @@ from typing import List, Dict, Callable, Any
 from faker import Faker
 from alembic.migration import MigrationContext
 from alembic.operations import Operations
-from sqlalchemy import MetaData, engine
+from sqlalchemy import MetaData, sql, engine, ext, orm
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
 
 
 class Seeder():
     """Abstract class to provide common seeding functionality
 
     Args:
-        conn: SqlAlchemy connection
-        operation: Migrations operation object
-        meta: database schema
+        eng: SqlAlchemy engine
 
     Attributes:
-        unique: Dict holding all values used to check uniqueness
+        _unique: Dict holding all values used to check uniqueness
         faker: Faker object to generate dummy data
+        connection: sqlalchemy connection
+        operation: sqlalchemy migration operations
+        meta: database table schema meta
+        base: sqlalchemy base class for declaring models
+        engine: sqlalchemy engine
     """
 
     __metaclass__ = ABCMeta
 
-    unique: Dict[str, List[str]] = {}
+    _unique: Dict[str, List[str]] = {}
 
     faker: Faker = Faker(['en_GB'])
 
+    connection: engine.base.Connection = None
 
-    @abstractmethod
-    def __init__(self, conn: engine.base.Connection):
+    operation: Operations = None
+
+    meta: sql.schema.MetaData = None
+
+    base: ext.declarative.api.DeclarativeMeta = None
+
+
+
+
+    def __init__(self, eng: engine.Engine) -> None:
+
+        self.engine: engine.Engine = eng
+
         # set connection
-        self.conn = conn
+        Seeder.connection = eng.connect()
 
         # get operations context
-        self.operation = Operations(MigrationContext.configure(conn))
+        Seeder.operation = Operations(MigrationContext.configure(Seeder.connection))
 
         # get metadata from current connection
-        self.meta = MetaData(bind=self.operation.get_bind())
+        Seeder.meta = MetaData(bind=self.operation.get_bind())
+
+        Seeder.base = automap_base()
 
         # reflect database
-        self.meta.reflect()
+        Seeder.base.prepare(eng, reflect=True)
+        Seeder.meta.reflect()
 
 
     @staticmethod
-    @abstractmethod
-    def create_unique(unique_key: str, func: Callable[..., Any], *args: List[Any]):
+    def create_unique(unique_key: str, func: Callable[..., Any], *args: List[Any]) -> str:
         """Create a guaranteed unique value
 
         Args:
@@ -54,25 +73,29 @@ class Seeder():
             args: optional args for callable function
 
         Returns:
-            str: unique value
+            unique value
         """
-        value = func(*args)
+        value: Callable[..., Any] = func(*args)
 
         # create unique key of not exists
-        if unique_key not in Seeder.unique.keys():
-            Seeder.unique[unique_key] = []
+        if unique_key not in Seeder._unique.keys():
+            Seeder._unique[unique_key] = []
 
         # if value generated has already been used, recurse to try again
-        if value in Seeder.unique[unique_key]:
+        if value in Seeder._unique[unique_key]:
             return Seeder.create_unique(unique_key, func, *args)
 
-        Seeder.unique[unique_key].append(value)
+        Seeder._unique[unique_key].append(value)
 
         return value
 
 
-    @abstractmethod
-    def seed(self):
+    def create_session(self) -> orm.Session:
+        """create a session for transactions"""
+        return Session(self.engine)
+
+
+    def seed(self) -> None:
         """Runs seeder after checking env"""
         if os.getenv('SEED') != 'true':
             return
@@ -80,5 +103,5 @@ class Seeder():
 
 
     @abstractmethod
-    def run(self):
+    def run(self) -> None:
         """extend in child class to run seeding"""

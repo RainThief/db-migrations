@@ -4,23 +4,42 @@
 
 set -euo pipefail
 
-PIP=${1:-"true"}
+INSTALL="false"
+GENERATE=""
 
-if [ "$PIP" == "true" ]; then
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -i|--install)
+        INSTALL="true"
+        shift
+        ;;
+        -g|--autogenerate)
+        GENERATE="--autogenerate"
+        shift
+        ;;
+        *)
+        shift
+        ;;
+    esac
+done
+
+
+if [ "$INSTALL" == "true" ]; then
     pip install -r requirements.txt
 fi
 
-echo -n "Migration name? " && read -e NAME
+echo -n "Migration name? " && read -r -e NAME
 
 # trim whitespace
 NAME="$(echo "$NAME" | xargs)"
 
 if [ "$NAME" == "" ]; then
     echo ""
-    bash create_migration.sh "false"
+    bash create_migration.sh
 else
     STAMP="$(date +"%Y_%m_%dT%H_%M_%S")"
-    alembic revision --rev-id "$STAMP" -m "$NAME"
+    alembic revision $GENERATE --rev-id "$STAMP" -m "$NAME"
 fi
 
 
