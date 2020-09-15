@@ -7,13 +7,13 @@ Revises: ${down_revision | comma,n}
 Create Date: ${create_date}
 
 """
+import os
 from alembic import op, context
 ${imports if imports else ""}
 # this import may not be used if not using sqlalchemy imports
 # but needs to be in template for convienece
 import sqlalchemy as sa # pylint: disable=unused-import
 
-# import seeders and utils here
 
 # revision identifiers, used by Alembic.
 revision = ${repr(up_revision)}
@@ -26,7 +26,8 @@ def upgrade():
     % if upgrades:
     ${upgrades}
     % endif
-    seed()
+    if os.getenv('SEED') != 'true':
+        seed()
 
 
 def downgrade():

@@ -5,12 +5,16 @@ from sqlalchemy import Table
 from util.seeder import Seeder
 from models.models import Account
 
+# we can allow for `self` to be used as instantiated class
+# incase seeder needs to hold state datạ
+# pylint: disable=no-self-use
+
 
 class AccountsSeeder(Seeder):
     """Seed accounts table"""
 
 
-    def run(self) -> None:
+    def _run(self) -> None:
         """run seeding logic"""
         # SEED with SQL; simplicity over efficiency for seeding
         insert_person_sql = (
@@ -35,8 +39,8 @@ class AccountsSeeder(Seeder):
         Seeder.operation.bulk_insert(accounts_table, data)
 
         # seed with reflected models
-        accounts = self.base.classes.accounts
-        session = self.create_session()
+        accounts = Seeder.get_meta_model("accxounts")
+        session = Seeder.create_session()
         session.bulk_save_objects([
             accounts(**self.account()),
         ])
@@ -50,8 +54,7 @@ class AccountsSeeder(Seeder):
         session.close()
 
 
-    @staticmethod
-    def account() -> Dict[str, str]:
+    def account(self) -> Dict[str, str]:
         """create account dict"""
         return {
             'username': Seeder.create_unique('username', Seeder.faker.profile, ['username'])['username'],
