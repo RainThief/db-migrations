@@ -1,9 +1,6 @@
 """orm models"""
 import sqlalchemy as sa
-from sqlalchemy.ext.declarative import declarative_base
-
-
-Base: sa.ext.declarative.api.DeclarativeMeta = declarative_base()
+from .base import Base
 
 
 class Account(Base):

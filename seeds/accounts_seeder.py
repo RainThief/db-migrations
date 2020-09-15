@@ -39,7 +39,7 @@ class AccountsSeeder(Seeder):
         Seeder.operation.bulk_insert(accounts_table, data)
 
         # seed with reflected models
-        accounts = Seeder.get_meta_model("accxounts")
+        accounts = Seeder.get_meta_model("accounts")
         session = Seeder.create_session()
         session.bulk_save_objects([
             accounts(**self.account()),
