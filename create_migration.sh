@@ -38,8 +38,10 @@ if [ "$NAME" == "" ]; then
     echo ""
     bash create_migration.sh
 else
+    # allow command to fail if empty repo
+    COMMIT_HASH=$(git rev-parse --short HEAD) || true
     STAMP="$(date +"%Y_%m_%dT%H_%M_%S")"
-    alembic revision $GENERATE --rev-id "$STAMP" -m "$NAME"
+    alembic revision $GENERATE --rev-id "${STAMP}__${COMMIT_HASH}_" -m "$NAME"
 fi
 
 
