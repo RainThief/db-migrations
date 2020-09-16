@@ -1,7 +1,6 @@
 """seeder module"""
 from typing import Dict
 import sqlalchemy as sa
-from sqlalchemy import Table
 from util.seeder import Seeder
 from models.models import Account
 
@@ -25,7 +24,7 @@ class AccountsSeeder(Seeder):
 
         # SEED with alembic for declarative
         # use reflection
-        accounts_table = Table('accounts', Seeder.meta)
+        accounts_table = sa.Table('accounts', Seeder.meta)
 
         # OR declare manually
         accounts_table = sa.table('accounts',
