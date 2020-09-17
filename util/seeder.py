@@ -1,5 +1,4 @@
 """Seeder module"""
-import os
 from abc import ABCMeta, abstractmethod
 from typing import List, Dict, Callable, Any
 from faker import Faker
@@ -131,10 +130,3 @@ class Seeder():
     @abstractmethod
     def _run(self) -> None:
         """extend in child class to run seeding"""
-
-
-    def seed(self) -> None:
-        """Runs seeder after checking env"""
-        if os.getenv('SEED') != 'true':
-            return
-        self._run()

@@ -26,7 +26,7 @@ def upgrade():
     % if upgrades:
     ${upgrades}
     % endif
-    if os.getenv('SEED') != 'true':
+    if os.getenv('SEED') == 'true':
         seed()
 
 
