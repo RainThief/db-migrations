@@ -1,4 +1,5 @@
 """script to run all seeders sequentially"""
+import os
 from alembic import config
 import sqlalchemy as sa
 from seeds.accounts_seeder import AccountsSeeder
@@ -11,7 +12,7 @@ def main() -> None:
         engine: SqlAlchemy engine
     """
     # list seeders here in order
-    AccountsSeeder().seed()
+    AccountsSeeder().run()
 
 
 def get_engine() -> sa.engine.Engine:
@@ -26,5 +27,6 @@ def get_engine() -> sa.engine.Engine:
 
 
 if __name__ == "__main__":
-    Seeder.connect(get_engine())
-    main()
+    if os.getenv('SEED') == 'true':
+        Seeder.connect(get_engine())
+        main()

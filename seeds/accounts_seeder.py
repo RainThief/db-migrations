@@ -13,7 +13,7 @@ class AccountsSeeder(Seeder):
     """Seed accounts table"""
 
 
-    def _run(self) -> None:
+    def run(self) -> None:
         """run seeding logic"""
         # SEED with SQL; simplicity over efficiency for seeding
         insert_person_sql = (
