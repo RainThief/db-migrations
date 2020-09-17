@@ -128,5 +128,5 @@ class Seeder():
 
 
     @abstractmethod
-    def _run(self) -> None:
+    def run(self) -> None:
         """extend in child class to run seeding"""

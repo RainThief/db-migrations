@@ -2,6 +2,8 @@
 
 IMAGE_NAME=${CI_IMAGE:-"migrations_ci_support_image"}
 CI=${CI:-"false"}
+PYTHONPATH="$(pwd)"
+export PYTHONPATH
 
 _pushd(){
     command pushd "$@" > /dev/null
@@ -15,6 +17,7 @@ exec_in_container() {
     if ! docker pull "$IMAGE_NAME"; then
         _pushd "${PROJECT_ROOT}"
         docker build --pull -t "$IMAGE_NAME" -f ./scripts/Dockerfile .
+        exitonfail $? "Docker build"
         _popd
     fi
 
@@ -68,4 +71,9 @@ echo_success(){
 echo_danger(){
     red='\033[0;31;1m'
     echo_colour "$1" "${red}"
+}
+
+echo_info(){
+  cyan='\033[0;36;1m'
+  echo_colour "$1" "${cyan}"
 }
