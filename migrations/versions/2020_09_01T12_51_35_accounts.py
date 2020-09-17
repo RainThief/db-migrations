@@ -1,6 +1,6 @@
 # disable linting errors caused by alembic auto generated code
 # pylint: disable=invalid-name,missing-function-docstring,no-member
-"""example delete me
+"""accounts
 
 Revision ID: 2020_09_01T12_51_35
 Revises:
