@@ -1,9 +1,12 @@
 """seeder module"""
 from typing import Dict
 import sqlalchemy as sa
-from sqlalchemy import Table
 from util.seeder import Seeder
 from models.models import Account
+
+# we can allow for `self` to be used as instantiated class
+# incase seeder needs to hold state datạ
+# pylint: disable=no-self-use
 
 
 class AccountsSeeder(Seeder):
@@ -21,7 +24,7 @@ class AccountsSeeder(Seeder):
 
         # SEED with alembic for declarative
         # use reflection
-        accounts_table = Table('accounts', Seeder.meta)
+        accounts_table = sa.Table('accounts', Seeder.meta)
 
         # OR declare manually
         accounts_table = sa.table('accounts',
@@ -35,8 +38,8 @@ class AccountsSeeder(Seeder):
         Seeder.operation.bulk_insert(accounts_table, data)
 
         # seed with reflected models
-        accounts = self.base.classes.accounts
-        session = self.create_session()
+        accounts = Seeder.get_meta_model("accounts")
+        session = Seeder.create_session()
         session.bulk_save_objects([
             accounts(**self.account()),
         ])
@@ -50,8 +53,7 @@ class AccountsSeeder(Seeder):
         session.close()
 
 
-    @staticmethod
-    def account() -> Dict[str, str]:
+    def account(self) -> Dict[str, str]:
         """create account dict"""
         return {
             'username': Seeder.create_unique('username', Seeder.faker.profile, ['username'])['username'],

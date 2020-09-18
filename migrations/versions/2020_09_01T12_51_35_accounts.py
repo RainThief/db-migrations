@@ -7,6 +7,7 @@ Revises:
 Create Date: 2020-09-01 12:51:35.147129
 
 """
+import os
 from alembic import op
 import sqlalchemy as sa
 
@@ -29,7 +30,8 @@ def upgrade():
             last_login TIMESTAMP
         );
     """)
-    seed()
+    if os.getenv('SEED') == 'true':
+        seed()
 
 
 def downgrade():
@@ -41,7 +43,7 @@ def seed():
         "INSERT INTO accounts (username, password, email) VALUES ('{username}', '{password}', '{email}');"
     )
     op.get_bind().execute(sa.text(insert_person_sql.format(
-        username='MyUsername',
-        password='MyPassword',
-        email='MyEmail@email.com',
+        username='my username',
+        password='myPassword',
+        email='my.email@email.com',
     )))
