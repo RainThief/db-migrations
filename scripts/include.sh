@@ -48,7 +48,6 @@ warnonfail() {
     if [ "$1" -ne "0" ] && [ "$CI" != "true" ]
     then
         echo_warning "$2 warning"
-        sleep 5
     fi
 }
 
