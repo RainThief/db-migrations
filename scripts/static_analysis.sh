@@ -22,6 +22,8 @@ done < <(printf '%s\n' "$FILES")
 echo_info "linting bash"
 shellcheck ./*.sh
 exitonfail $? "shellcheck"
+shellcheck ./scripts/*.sh
+exitonfail $? "shellcheck"
 
 
 echo_info "linting dockerfile"
