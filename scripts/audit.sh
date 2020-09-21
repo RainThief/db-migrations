@@ -6,7 +6,7 @@ source "scripts/include.sh"
 pip freeze | safety check --stdin
 exitonfail $? "dependency audit"
 
-LICENSE_LIST="$(curl -L https://raw.githubusercontent.com/defencedigital/react-lint-config/non-spdx-licenses/licenses.json | jq -c -r '.[]')"
+LICENSE_LIST="$(curl -L https://raw.githubusercontent.com/defencedigital/react-lint-config/master/licenses.json | jq -c -r '.[]')"
 exitonfail $? "obtaining license list"
 
 LICENSES_USED="$(pip-licenses)"
