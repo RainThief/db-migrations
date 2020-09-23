@@ -2,12 +2,11 @@
 from typing import Dict
 import sqlalchemy as sa
 from util.seeder import Seeder
-from models.models import Account
+from orm.models.account import Account
 
 # we can allow for `self` to be used as instantiated class
 # incase seeder needs to hold state datạ
 # pylint: disable=no-self-use
-
 
 class AccountsSeeder(Seeder):
     """Seed accounts table"""

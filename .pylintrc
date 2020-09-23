@@ -6,7 +6,9 @@ disable=
         # alembic runs in different path
         import-error,
         # models may not contain public methods
-        too-few-public-methods
+        too-few-public-methods,
+        # allow alembic env to import all models
+        wildcard-import, unused-wildcard-import
 
 
 [FORMAT]
