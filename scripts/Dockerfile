@@ -6,6 +6,7 @@ RUN  apt-get update &&  apt-get install -y --no-install-recommends \
     gcc=4:8.3.0-1 \
     curl=7.64.0-4+deb10u1 \
     xz-utils=5.2.4-1 \
+    jq=1.5+dfsg-2+b1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -21,10 +22,12 @@ RUN curl -L "https://github.com/koalaman/shellcheck/releases/download/v0.7.1/she
   && chmod +x /usr/local/bin/shellcheck \
   && rm -Rf shellcheck*
 
-RUN apt-get purge -y gcc libpq-dev curl xz-utils && apt-get autoremove -y && rm -Rf /var/cache/apt
-
 COPY requirements.txt requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+    # mock cache dir to disable safety warning
+    && mkdir -p /.cache/pip && chmod 666 -Rc /.cache
+
+RUN apt-get purge -y gcc libpq-dev xz-utils && apt-get autoremove -y && rm -Rf /var/cache/apt && rm -Rf /root/.cache
 
 WORKDIR /usr/app

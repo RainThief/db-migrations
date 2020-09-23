@@ -13,15 +13,16 @@ FILES=$(find util seeds scripts migrations -iname "*.py")
 while IFS= read -r FILE; do
     # echo_info "linting $FILE"
     if ! RESULT=$(pylint "$@" "$FILE"); then
-        EXIT=$?
         echo "$RESULT"
-        exitonfail $EXIT "pylint"
+        exitonfail 1 "pylint"
     fi
 done < <(printf '%s\n' "$FILES")
 
 
 echo_info "linting bash"
 shellcheck ./*.sh
+exitonfail $? "shellcheck"
+shellcheck ./scripts/*.sh
 exitonfail $? "shellcheck"
 
 
