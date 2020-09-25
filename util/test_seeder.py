@@ -1,8 +1,5 @@
 # pylint: skip-file
-
 import unittest
-import os
-from unittest.mock import MagicMock
 from .seeder import Seeder, NonUniqueError
 
 
@@ -55,19 +52,6 @@ class TestSeeder(unittest.TestCase):
                 second_value
             )
 
-
-    def test_will_seed_in_seed_env(self):
-        os.environ['SEED'] = "true"
-        mock = Seeder._run = MagicMock()
-        Seeder().seed()
-        mock.assert_called_once_with()
-
-
-    def test_will_not_seed_in_non_seed_env(self):
-        os.environ['SEED'] = "false"
-        mock = Seeder._run = MagicMock()
-        Seeder().seed()
-        mock.assert_not_called()
 
 
 if __name__ == '__main__':

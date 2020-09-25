@@ -11,7 +11,7 @@ import os
 from alembic import op, context
 ${imports if imports else ""}
 # this import may not be used if not using sqlalchemy imports
-# but needs to be in template for convienece
+# but needs to be in template for convenience
 import sqlalchemy as sa # pylint: disable=unused-import
 
 

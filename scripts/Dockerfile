@@ -7,6 +7,7 @@ RUN  apt-get update &&  apt-get install -y --no-install-recommends \
     curl=7.64.0-4+deb10u1 \
     xz-utils=5.2.4-1 \
     jq=1.5+dfsg-2+b1 \
+    git=1:2.20.1-2+deb10u3 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -28,6 +29,7 @@ RUN pip install --no-cache-dir -r requirements.txt \
     # mock cache dir to disable safety warning
     && mkdir -p /.cache/pip && chmod 666 -Rc /.cache
 
-RUN apt-get purge -y gcc libpq-dev xz-utils && apt-get autoremove -y && rm -Rf /var/cache/apt && rm -Rf /root/.cache
+# keep libpq-dev for psycopg2 functionality
+RUN apt-get purge -y gcc xz-utils && apt-get autoremove -y && rm -Rf /var/cache/apt && rm -Rf /root/.cache
 
 WORKDIR /usr/app

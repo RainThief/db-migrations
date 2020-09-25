@@ -123,7 +123,6 @@ class Seeder():
     @staticmethod
     def create_session() -> orm.Session:
         """create a session for transactions"""
-        # @todo test unique session
         return Session(Seeder._engine)
 
 

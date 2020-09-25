@@ -6,7 +6,7 @@ from seeds.accounts_seeder import AccountsSeeder
 from util.seeder import Seeder
 
 
-def main() -> None:
+def run() -> None:
     """
     Args:
         engine: SqlAlchemy engine
@@ -26,7 +26,11 @@ def get_engine() -> sa.engine.Engine:
     )
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """check env and connect to run seeders"""
     if os.getenv('SEED') == 'true':
         Seeder.connect(get_engine())
-        main()
+        run()
+
+if __name__ == "__main__":
+    main()
