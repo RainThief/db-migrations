@@ -2,6 +2,7 @@
 import unittest
 import argparse
 import sys
+from unittest.mock import MagicMock
 from pyfakefs.fake_filesystem_unittest import TestCase
 from scripts.create_seeder import ValidateName, CreateSeeder, parse_args
 
@@ -122,12 +123,12 @@ class TestCreateSeeder(TestCase):
 
 
     def test_fails_cannot_write_file(self):
-        with self.assertRaises(SystemExit) as exit_code:
-            self.fs.chmod('seeds', 0o000)
-            sys.argv = [
-                'scripts/create_seeder.py', '--name', 'TestSeeder'
-            ]
-            parse_args()
+        sys.exit = MagicMock()
+        self.fs.chmod('seeds', 0o000)
+        sys.argv = [
+            'scripts/create_seeder.py', '--name', 'TestSeeder'
+        ]
+        parse_args()
         self.assertRaises(PermissionError)
         self.assertEqual(exit_code.exception.code, 1)
 

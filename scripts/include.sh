@@ -13,6 +13,13 @@ _popd(){
     command popd > /dev/null
 }
 
+# driver dbname user password
+prepare_connection(){
+    INI_FILE="$(sed "s/driver/$1/g" migrations/alembic.ini-dist)"
+    INI_FILE="${INI_FILE//dbname/$2}"
+    echo "$INI_FILE" > './alembic.ini'
+}
+
 exec_in_container() {
     if ! docker pull "$IMAGE_NAME"; then
         _pushd "${PROJECT_ROOT}"

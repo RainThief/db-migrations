@@ -1,0 +1,54 @@
+name: React component library
+
+
+on:
+  push:
+    branches:
+      - "*"
+
+
+env:
+  CI: true
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Code analysis
+        run: ./run_static_analysis.sh
+
+      - name: Dependency audit
+        run: ./run_audit.sh
+
+
+  test:
+    name: Test
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Unit tests
+        run: ./run_unit_tests.sh
+
+      - name: System tests
+        run: ./run_system_tests.sh
+
+
+  stories:
+    name: Deploy
+    if: github.ref == 'refs/heads/master'
+    needs: [check, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Deploy
+        run: echo "@todo deploy"

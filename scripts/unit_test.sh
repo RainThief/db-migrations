@@ -3,6 +3,8 @@ set -uo pipefail
 
 source "scripts/include.sh"
 
+prepare_connection "postgresql" "db"
+
 coverage run -m unittest discover
 exitonfail $? "Unit tests"
 

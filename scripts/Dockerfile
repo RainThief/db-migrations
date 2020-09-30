@@ -1,6 +1,7 @@
 FROM python:3.8-slim-buster
 
 RUN  apt-get update &&  apt-get install -y --no-install-recommends \
+    libpq5=11.7-0+deb10u1 \
     libpq-dev=11.7-0+deb10u1 \
     libc6-dev=2.28-10 \
     gcc=4:8.3.0-1 \
