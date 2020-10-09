@@ -1,16 +1,14 @@
-FROM python:3.8-slim-buster
+FROM python:3.8-alpine3.12 AS builder
 
-RUN  apt-get update &&  apt-get install -y --no-install-recommends \
-    libpq5=11.7-0+deb10u1 \
-    libpq-dev=11.7-0+deb10u1 \
-    libc6-dev=2.28-10 \
-    gcc=4:8.3.0-1 \
-    curl=7.64.0-4+deb10u1 \
-    xz-utils=5.2.4-1 \
-    jq=1.5+dfsg-2+b1 \
-    git=1:2.20.1-2+deb10u3 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    bash=5.0.17-r0 \
+    git=2.26.2-r0 \
+    curl=7.69.1-r1 \
+    jq=1.6-r1 \
+    gcc=9.3.0-r2 \
+    postgresql-dev=12.4-r0\
+    musl-dev=1.1.24-r9 \
+    python3-dev=3.8.5-r0
 
 # install hadolint (Dockerfile linter)
 RUN curl -L "https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64"  -o "hadolint" \
@@ -26,11 +24,25 @@ RUN curl -L "https://github.com/koalaman/shellcheck/releases/download/v0.7.1/she
 
 COPY requirements.txt requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt \
-    # mock cache dir to disable safety warning
-    && mkdir -p /.cache/pip && chmod 666 -Rc /.cache
+RUN pip install --no-cache-dir -r requirements.txt
 
-# keep libpq-dev for psycopg2 functionality
-RUN apt-get purge -y gcc xz-utils && apt-get autoremove -y && rm -Rf /var/cache/apt && rm -Rf /root/.cache
+
+FROM python:3.8-alpine3.12
+
+RUN apk add --no-cache \
+    bash=5.0.17-r0 \
+    git=2.26.2-r0 \
+    jq=1.6-r1 \
+    curl=7.69.1-r1 \
+    postgresql=12.4-r0; \
+    mkdir -p /.cache/pip && chmod 666 -Rc /.cache
+
+COPY --from=builder /usr/local/bin/hadolint /usr/local/bin/hadolint
+
+COPY --from=builder /usr/local/bin/shellcheck /usr/local/bin/shellcheck
+
+COPY --from=builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
+
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 WORKDIR /usr/app

@@ -31,6 +31,7 @@ def main() -> None:
     if os.getenv('SEED') == 'true':
         Seeder.connect(get_engine())
         run()
+        print("database successfully seeded")
 
 if __name__ == "__main__":
     main()

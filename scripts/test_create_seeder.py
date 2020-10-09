@@ -2,7 +2,7 @@
 import unittest
 import argparse
 import sys
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from pyfakefs.fake_filesystem_unittest import TestCase
 from scripts.create_seeder import ValidateName, CreateSeeder, parse_args
 
@@ -54,7 +54,7 @@ class TestCreateSeeder(TestCase):
             'TestSeeder'
         )
 
-    def test_rejects_snakecase_name_arg(self):
+    def test_fails_snakecase_name_arg(self):
         with self.assertRaises(ValueError):
             validate(
                 parser,
@@ -64,7 +64,7 @@ class TestCreateSeeder(TestCase):
             )
 
 
-    def test_rejects_camelcase_name_arg(self):
+    def test_fails_camelcase_name_arg(self):
         with self.assertRaises(ValueError):
             validate(
                 parser,
@@ -122,15 +122,14 @@ class TestCreateSeeder(TestCase):
         self.assertEqual(exit_code.exception.code, 2)
 
 
+    @patch('sys.exit', MagicMock())
     def test_fails_cannot_write_file(self):
-        sys.exit = MagicMock()
         self.fs.chmod('seeds', 0o000)
         sys.argv = [
             'scripts/create_seeder.py', '--name', 'TestSeeder'
         ]
         parse_args()
         self.assertRaises(PermissionError)
-        self.assertEqual(exit_code.exception.code, 1)
 
 
 if __name__ == '__main__':

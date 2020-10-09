@@ -3,7 +3,9 @@ set -uo pipefail
 
 source "scripts/include.sh"
 
-prepare_connection "postgresql" "db"
+# alembic needs config file even though connection is mocked
+export DB_URL=postgresql://user:pass@localhost/dbname
+prepare_connection "postgresql" "db" "localhost" "user" "pass"
 
 coverage run -m unittest discover
 exitonfail $? "Unit tests"
