@@ -1,10 +1,7 @@
 FROM python:3.8-alpine3.12 AS builder
 
 RUN apk add --no-cache \
-    bash=5.0.17-r0 \
-    git=2.26.2-r0 \
     curl=7.69.1-r1 \
-    jq=1.6-r1 \
     gcc=9.3.0-r2 \
     postgresql-dev=12.4-r0\
     musl-dev=1.1.24-r9 \

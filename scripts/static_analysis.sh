@@ -9,7 +9,7 @@ export PYLINTHOME="/tmp"
 
 
 echo_info "linting python"
-FILES=$(find util seeds scripts migrations orm -iname "*.py")
+FILES=$(find "util" "seeds" "scripts" "migrations" "orm" "test" -iname "*.py")
 while IFS= read -r FILE; do
     # echo_info "linting $FILE"
     if ! RESULT=$(pylint "$@" "$FILE"); then

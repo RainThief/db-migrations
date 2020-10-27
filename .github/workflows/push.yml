@@ -1,4 +1,4 @@
-name: React component library
+name: DB migrations
 
 
 on:
@@ -9,7 +9,9 @@ on:
 
 env:
   CI: true
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  DOCKER_USER: ${{ github.actor }}
+  DOCKER_PASS: ${{ secrets.DOCKER_TOKEN }}
+  DOCKER_REG: docker.pkg.github.com
 
 
 jobs:
@@ -28,7 +30,7 @@ jobs:
 
 
   test:
-    name: Test
+    name: Unit test
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout repo
@@ -37,14 +39,28 @@ jobs:
       - name: Unit tests
         run: ./run_unit_tests.sh
 
+
+  system_test:
+    name: System test
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
       - name: System tests
         run: ./run_system_tests.sh
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: robot-logs
+          path: logs
 
 
   stories:
     name: Deploy
     if: github.ref == 'refs/heads/master'
-    needs: [check, test]
+    needs: [check, test, system_test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo

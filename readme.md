@@ -131,6 +131,18 @@ Scripts to perform various build, install, analysis, etc operations.
 
 Seeder classes to populate database with data.  Useful for inserting dummy data for testing.
 
+#### `/test`
+
+Robot Framework test suite installation.
+
+#### `/test/lib`
+
+Python libray to support robot test cases.
+
+#### `/test/tests`
+
+System test cases.  Should be written in Gherkin for explicit testing requirements.
+
 #### `/util`
 
 Utilities for the proper functioning of this project.
@@ -180,6 +192,8 @@ Security audit passed
 
 #### `$ ./run_static_analysis.sh`
 
+Runs coding standards checks 
+
 Example output
 
 ```shell
@@ -191,7 +205,27 @@ Static analysis passed
 
 #### `$ ./run_system_tests.sh`
 
-@todo
+Runs robot system tests
+
+Example output
+
+```shell
+==============================================================================
+Base-Tests :: Tests cases for testing the example migration and seeds
+==============================================================================
+[ WARN ] Service not ready error: failed connection to database  postgresql://user:password@127.0.0.1:5432/db
+Can migrate an empty database to head :: Tests that migrations can... | PASS |
+------------------------------------------------------------------------------
+Can seed an empty database :: Tests that a database can be seeded     | PASS |
+------------------------------------------------------------------------------
+Can migrate both directions :: Tests that migrations can be applie... | PASS |
+------------------------------------------------------------------------------
+Base-Tests :: Tests cases for testing the example migration and seeds | PASS |
+3 critical tests, 3 passed, 0 failed
+3 tests total, 3 passed, 0 failed
+==============================================================================
+Debug:   /usr/app/logs/system_test.log
+```
 
 #### `$ ./run_unit_tests.sh`
 

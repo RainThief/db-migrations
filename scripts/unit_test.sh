@@ -7,7 +7,7 @@ source "scripts/include.sh"
 export DB_URL=postgresql://user:pass@localhost/dbname
 prepare_connection "postgresql" "db" "localhost" "user" "pass"
 
-coverage run -m unittest discover
+coverage run -m pytest
 exitonfail $? "Unit tests"
 
 coverage report --fail-under=80 --skip-covered --show-missing --skip-empty

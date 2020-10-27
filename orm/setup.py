@@ -15,7 +15,6 @@ setup(
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OGL-UK-3.0",
         "Operating System :: OS Independent",
         "Topic :: Database",
     ],
