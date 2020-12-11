@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-IMAGE_NAME=${CI_IMAGE:-"migrations_ci_support_image"}
+IMAGE_NAME=${CI_IMAGE:-"docker.pkg.github.com/rainthief/db-migrations/db_migrations_support_image:0.0.1"}
 CI=${CI:-"false"}
 PYTHONPATH="$(pwd)"
 export PYTHONPATH
@@ -153,6 +153,15 @@ prepare_connection(){
 }
 
 exec_in_container() {
+    CONT_USER=$(id -u):$(id -g)
+    OPTS="-it --init"
+
+    if [ "$CI" == "true" ]; then
+        CONT_USER=0
+        OPTS="-t"
+        docker login "$DOCKER_REG" -u "$DOCKER_USER" -p "$DOCKER_PASS"
+    fi
+
     if ! docker pull "$IMAGE_NAME"; then
         _pushd "${PROJECT_ROOT}"
         docker build --pull -t "$IMAGE_NAME" -f ./scripts/Dockerfile .
@@ -160,15 +169,9 @@ exec_in_container() {
         _popd
     fi
 
-    CONT_USER=$(id -u):$(id -g)
-    OPTS="-it --init"
+    CONT_NAME=$(basename "$IMAGE_NAME" | sed -r 's/:(.*)//' )
 
-    if [ "$CI" == "true" ]; then
-        CONT_USER=0
-        OPTS="-t"
-    fi
-
-    docker run --rm $OPTS -u="$CONT_USER" --name "$IMAGE_NAME" \
+    docker run --rm $OPTS -u="$CONT_USER" --name "$CONT_NAME" \
         -v "$PROJECT_ROOT/:/usr/app/" \
         -e "CI=$CI" \
         -e "PYTHONPATH=/usr/app" \

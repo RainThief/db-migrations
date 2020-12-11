@@ -4,7 +4,7 @@ set -u
 # Assume this script is in the src directory and work from that location
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
 
-IMAGE="docker.pkg.github.com/defencedigital/robot-support/robot_support_image:0.0.1"
+IMAGE="docker.pkg.github.com/rainthief/robot-test-libraries/robot_testing:0.0.2"
 ROBOT_CONT_NAME="robot_tests"
 
 #local log directory relative path to project root

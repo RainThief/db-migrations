@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -u
+set -eu
 
 # Assume this script is in the src directory and work from that location
 PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
