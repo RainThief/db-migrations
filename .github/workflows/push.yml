@@ -57,14 +57,14 @@ jobs:
           path: logs
 
 
-  stories:
-    name: Deploy
-    if: github.ref == 'refs/heads/master'
-    needs: [check, test, system_test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
+  # deploy:
+  #   name: Deploy
+  #   if: github.ref == 'refs/heads/master'
+  #   needs: [check, test, system_test]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v2
 
-      - name: Deploy
-        run: echo "@todo deploy"
+  #     - name: Deploy
+  #       run: echo "@todo deploy"

@@ -2,7 +2,8 @@
 
 
 from test.lib.database import DatabaseConnection
-from robot_support.docker import Container, Client
+import docker as dockerlib
+from robot_support.docker import Container
 
 
 CONTAINER_NAME = "robot-postgres"
@@ -37,5 +38,7 @@ def start(db_image: str, capture_log: bool = False):
 
 def stop():
     """stop postgres container"""
-    if len(Client.containers.list(filters={"name": CONTAINER_NAME})) == 1:
+    try:
         docker.stop()
+    except dockerlib.errors.NotFound:
+        pass
